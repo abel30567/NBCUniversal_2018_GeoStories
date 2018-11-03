@@ -10,8 +10,8 @@ class App extends Component {
     this.state = {
       // Initial Center of Map
       position: {
-        lat: 25.7737859,
-        lng: -80.1899627,
+        lat: Number,
+        lng: Number,
       },
       marketCallBtn: 'inline',
       closeVideo: false,
@@ -50,7 +50,7 @@ class App extends Component {
       url: 'http://localhost:8080/markers',
       data: {
         lat: latData,
-        long: longData,
+        lng: longData,
       }
     })
     .then((response) => {
@@ -87,7 +87,7 @@ class App extends Component {
         <a onClick={this.hideVideo} className="btn" style={{ display: this.state.videoDisplay, zIndex: '1001', position: 'absolute', top: '0px', left: '0px', color: 'red' }}>X</a>
         <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px' }} src="https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK" width="500px"></iframe>
         {/* <VideoPlayer /> */}
-        <MapContainer markers={this.state.markers} click={() => {this.showVideo()}} />
+        <MapContainer position={this.state.position} markers={this.state.markers} click={() => {this.showVideo()}} />
       </div>
     );
   }

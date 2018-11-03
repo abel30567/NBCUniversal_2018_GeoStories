@@ -55,10 +55,10 @@ class MapContainer extends React.Component {
         // <iframe style={{ display: this.state.videoDisplay, position: 'absolute', top: '0px' }} src="https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK" width="500px"></iframe>
       <Map
         google={this.props.google}
-        zoom={17}
+        zoom={16}
         initialCenter={{
-          lat: this.state.position.lat,
-          lng: this.state.position.lng
+          lat: this.props.position.lat,
+          lng: this.props.position.lng
         }}
         style={{ width: "100%", height: "100%", zIndex: '100' }}
       >

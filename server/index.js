@@ -38,6 +38,7 @@ app.post('/markers', function(req, res) {
   async.auto({
     // Returns the user's position or Miami as a center, if no user location is provided
     "position": function(callback) {
+      // console.log(req.body);
       callback(null, {
         lat: req.body.lat || 25.7617,
         lng: req.body.lng || -80.1918
@@ -53,11 +54,11 @@ app.post('/markers', function(req, res) {
         // New marker is shifted N or S
         let latSign = Math.round(Math.random()) ? 1 : -1
         // How N or S is new marker shifted
-        let latChange = Math.random() / 8000
+        let latChange = Math.random() / 100
         // New marker is shifted E or W
         let lngSign = Math.round(Math.random()) ? 1 : -1
         // How E or W is new marker shifted
-        let lngChange = Math.random() / 8000
+        let lngChange = Math.random() / 100
         callback(null, {
           // Shifts a new marker vertically from user's position
           position: {
