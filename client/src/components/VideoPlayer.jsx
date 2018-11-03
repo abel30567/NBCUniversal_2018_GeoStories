@@ -51,8 +51,8 @@ class VideoPlayer extends React.Component {
         
         {/* <Image cloudName="dcs3c9dvw" publicId="samples/bike.jpg" width="500">
         </Image> */}
-        <Video cloudName="dcs3c9dvw" publicId="samples/sea-turtle" format="mp4" width="500" controls>
-          <Transformation width="500" height="300" />
+        <Video style={{ zIndex: '110', position: 'absolute' }} cloudName="dcs3c9dvw" publicId="samples/sea-turtle" format="mp4" width="80%" height="80%" controls>
+          <Transformation width="80%" height="80%" />
         </Video>
       </div>
     );

@@ -13,8 +13,8 @@ class MapContainer extends React.Component {
     this.state = {
       // Initial Center of Map
       position: {
-        lat: 25.7617,
-        lng: -80.1918
+        lat: 25.7737859,
+        lng: -80.1899627,
       },
       
       // Initial Markers on Map
@@ -37,14 +37,17 @@ class MapContainer extends React.Component {
         }
       ]
     };
+    this.onMarkerClick = this.onMarkerClick.bind(this);
   }
 
   /**
    * CHECK: https://www.npmjs.com/package/google-maps-react#onclick
    */
   onMarkerClick(props, map, event) {
-    console.log("Latitude: ", event.latLng.lat());
-    console.log("Longitude: ", event.latLng.lng());
+    // console.log("Latitude: ", event.latLng.lat());
+    // console.log("Longitude: ", event.latLng.lng());
+    this.props.click();
+    console.log(this.props);
   }
 
   render() {
@@ -61,14 +64,15 @@ class MapContainer extends React.Component {
     });
 
     return (
+        // <iframe style={{ display: this.state.videoDisplay, position: 'absolute', top: '0px' }} src="https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK" width="500px"></iframe>
       <Map
         google={this.props.google}
-        zoom={13}
+        zoom={17}
         initialCenter={{
           lat: this.state.position.lat,
           lng: this.state.position.lng
         }}
-        style={{ width: "600px", height: "400px" }}
+        style={{ width: "100%", height: "100%", zIndex: '100' }}
       >
         {markers}
       </Map>
