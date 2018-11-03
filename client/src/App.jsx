@@ -13,11 +13,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <a className="App-link" onClick={this.makeAPICall}>
-            Make API Call
-          </a>
-        </header>
+        
         <VideoPlayer />
         <MapContainer />
       </div>
