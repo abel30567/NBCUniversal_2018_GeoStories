@@ -4,6 +4,7 @@
 let dotenv = require('dotenv').config()
 let _ = require('lodash') // CHECK: https://lodash.com/docs/
 let async = require('async') // CHECK: https://caolan.github.io/async/docs.html
+let cors = require('cors') 
 let express = require('express')
 let bodyParser = require('body-parser')
 
@@ -13,6 +14,7 @@ let options = {
   port: process.env.PORT || 8080
 }
 
+app.use(cors())
 app.use(bodyParser.json())
 
 /**
