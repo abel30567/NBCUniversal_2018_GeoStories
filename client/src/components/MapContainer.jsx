@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /**
  * This component helps create an interactive Google Map Background
  *
@@ -18,50 +19,37 @@ class MapContainer extends React.Component {
       },
       
       // Initial Markers on Map
-      markers: [
-        {
-          name: "Ingraham Building",
-          title: "#hackathon #miami",
-          position: {
-            lat: 25.7737859,
-            lng: -80.1899627
-          }
-        },
-        {
-          name: "Monarc at Met 3",
-          title: "#hackathon #entrepreneur",
-          position: {
-            lat: 25.7721236,
-            lng: -80.1894522
-          }
-        }
-      ]
+      markers: props.markers,
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
   }
-
+  
+  componentWillReceiveProps(nextProps) {
+   this.setState({ markers: nextProps.markers })
+  }
   /**
    * CHECK: https://www.npmjs.com/package/google-maps-react#onclick
    */
   onMarkerClick(props, map, event) {
     // console.log("Latitude: ", event.latLng.lat());
     // console.log("Longitude: ", event.latLng.lng());
+    console.log(event, 'event');
+    console.log(props, 'marker props')
     this.props.click();
-    console.log(this.props);
+    // console.log(this.props);
   }
 
   render() {
-    let markers = this.state.markers.map(marker => {
-      return (
-        <Marker
-          key={`marker_${marker.name}`}
-          name={marker.name}
-          position={marker.position}
-          title={marker.title}
-          onClick={this.onMarkerClick}
-        />
-      );
-    });
+      
+      const mapStuff = this.state.markers.map(marker => 
+             ( <Marker
+                key={marker.position.lat}
+                position={marker.position}
+                onClick={this.onMarkerClick}
+              />)
+          );
+      
+    
 
     return (
         // <iframe style={{ display: this.state.videoDisplay, position: 'absolute', top: '0px' }} src="https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK" width="500px"></iframe>
@@ -74,7 +62,7 @@ class MapContainer extends React.Component {
         }}
         style={{ width: "100%", height: "100%", zIndex: '100' }}
       >
-        {markers}
+        {mapStuff}
       </Map>
     );
   }

@@ -60,9 +60,13 @@ app.post('/markers', function(req, res) {
         let lngChange = Math.random() / 8000
         callback(null, {
           // Shifts a new marker vertically from user's position
-          lat: results.position.lat + latSign * latChange,
+          position: {
+            lat: results.position.lat + latSign * latChange,
+            lng: results.position.lng + lngSign * lngChange,
+          },
+          
           // Shifts a new marker horizontally from user's position
-          lng: results.position.lng + lngSign * lngChange,
+          
           // Sends video
           url: video || "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK"
         })
