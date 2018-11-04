@@ -22,20 +22,31 @@ class MapContainer extends React.Component {
       markers: props.markers,
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
+    this.getCenter = this.getCenter.bind(this);
   }
   
   componentWillReceiveProps(nextProps) {
    this.setState({ markers: nextProps.markers })
+   console.log(nextProps, 'next props');
   }
   /**
    * CHECK: https://www.npmjs.com/package/google-maps-react#onclick
    */
+  getCenter(mapProps, map) {
+    // console.log(mapProps, map);
+    // console.log('latitude', map.center.lat());
+    // console.log('longitude', map.center.lng());
+    const lat = map.center.lat();
+    const long = map.center.lng();
+    this.props.getCenter(lat, long);
+  }
   onMarkerClick(props, map, event) {
     // console.log("Latitude: ", event.latLng.lat());
     // console.log("Longitude: ", event.latLng.lng());
-    console.log(event, 'event');
-    console.log(props, 'marker props')
-    this.props.click();
+    // console.log(event, 'event');
+    // console.log(props, 'marker props')
+    // props.video gets you src
+    this.props.click(props.video);
     // console.log(this.props);
   }
 
@@ -44,6 +55,7 @@ class MapContainer extends React.Component {
       const mapStuff = this.state.markers.map(marker => 
              ( <Marker
                 key={marker.position.lat}
+                video={marker.url}
                 position={marker.position}
                 onClick={this.onMarkerClick}
               />)
@@ -56,6 +68,7 @@ class MapContainer extends React.Component {
       <Map
         google={this.props.google}
         zoom={16}
+        onDragend={this.getCenter}
         initialCenter={{
           lat: this.props.position.lat,
           lng: this.props.position.lng

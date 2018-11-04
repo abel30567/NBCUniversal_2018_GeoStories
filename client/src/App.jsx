@@ -16,6 +16,7 @@ class App extends Component {
       marketCallBtn: 'inline',
       closeVideo: false,
       videoDisplay: 'none',
+      videoSrc: 'https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK',
       markers: [],
     }
     this.makeAPICall = this.makeAPICall.bind(this);
@@ -61,11 +62,12 @@ class App extends Component {
       console.log(err);
     });
   }
-  showVideo() {
+  showVideo(src) {
     // console.log('clicked');
     this.setState({ 
       seeVideo: true,
       videoDisplay: 'block',
+      videoSrc: src,
     });
   }
   hideVideo() {
@@ -83,11 +85,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        
         <a onClick={this.getMarkers} className="btn" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '50vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Chisme</a> 
         <a onClick={this.hideVideo} className="btn" style={{ display: this.state.videoDisplay, zIndex: '1001', position: 'absolute', top: '0px', left: '0px', color: 'red' }}>X</a>
-        <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px' }} src="https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK" width="500px"></iframe>
+        <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '100%', height: '100%' }} src={this.state.videoSrc} width="500px"></iframe>
         {/* <VideoPlayer /> */}
-        <MapContainer position={this.state.position} markers={this.state.markers} click={() => {this.showVideo()}} />
+        <MapContainer getCenter={(lat, long) => {this.makeAPICall(lat, long)}} position={this.state.position} markers={this.state.markers} click={(src) => {this.showVideo(src)}} />
       </div>
     );
   }
