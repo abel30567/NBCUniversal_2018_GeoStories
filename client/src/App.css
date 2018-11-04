@@ -1,3 +1,30 @@
 .nav {
-  position: absolute;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background-color: white;
+  padding-top: 5px;
+  z-index: 2500;
+  height: 80px;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+}
+.nav .logoBlock{
+  text-align: center;
+  width: 25%;
+}
+.nav img {
+  height: 70px;
+}
+@media only screen and (max-width: 600px) {
+  .nav .logoBlock{
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-top: 20px
+  }
+  .nav img {
+    max-height: 30px;
+  }
+  .App .single{
+    left: 33vw !important;
+  }
 }
