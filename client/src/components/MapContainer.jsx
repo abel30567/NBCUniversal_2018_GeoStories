@@ -26,8 +26,11 @@ class MapContainer extends React.Component {
       },
       showingStreetView: false,
       showingInfoWindow: false,
+      showingInfoWindowToo: false,
       activeMarker: {},
       selectedPlace: {},
+      selectedPlaceToo: {},
+      activeMarkerToo: {},
       
       // Initial Markers on Map
       markers: props.markers,
@@ -61,7 +64,7 @@ class MapContainer extends React.Component {
     const map = props.map;
     const google = props.google;
     const maps = google.maps;
-    const moveLat = 25.798456503069705;
+    const moveLat = 25.799456503069705;
     const moveLong = -80.3881903576721;
     let center = new maps.LatLng(moveLat, moveLong);
     map.panTo(center)
@@ -72,14 +75,18 @@ class MapContainer extends React.Component {
     });
   }
 
-  onMarkerClickToo(props, map, event) {
+  onMarkerClickToo(props, marker, event) {
     // console.log("Latitude: ", event.latLng.lat());
     // console.log("Longitude: ", event.latLng.lng());
     // console.log(event, 'event');
     // console.log(props, 'marker props')
     // props.video gets you src
-    this.props.click(props.video);
-    // console.log(this.props);
+    // this.props.click(props.video);
+    this.setState({
+      selectedPlaceToo: props,
+      activeMarkerToo: marker,
+      showingInfoWindowToo: true
+    });
   }
 
   noVideo() {
@@ -115,7 +122,7 @@ class MapContainer extends React.Component {
       });
       console.log(panorama);
       panorama.setVisible(true);
-      document.getElementById('secondFrame').setAttribute('style', 'display: block; position: absolute; top: 50vh; left: 50vw; z-index: 2000')
+      document.getElementById('secondFrame').setAttribute('style', 'display: block; position: absolute; top: 40vh; left: 10vw; z-index: 2000')
       document.getElementById('backToMap').setAttribute('style', 'display: block; position: absolute; top: 100px; left: 25px; z-index: 2010; color: red; background-color: white; border: 2px solid red; border-radius: 5px;')
     }}><img src={liddo} style={{ width: '25px' }} /></button>);
     ReactDOM.render(React.Children.only(button), document.getElementById("iwc"));
@@ -142,7 +149,7 @@ class MapContainer extends React.Component {
             onClick={this.onMarkerClick}
             name={'Current location'} 
             />
-  
+          
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
@@ -160,7 +167,9 @@ class MapContainer extends React.Component {
               </div>
           </InfoWindow></div>)
           let moneyShot = '';
+          let mapOpacity = '0.5';
           if (this.state.markers.length > 0) {
+            mapOpacity = '1';
             moneyShot = (<Marker 
               map={this.props.map}
               style={{display: moneyShot}}
@@ -172,7 +181,7 @@ class MapContainer extends React.Component {
 
     return (
       
-      <div style={{ width: '100vw', height: '100vh' }} className="col-xs-12">
+      <div style={{ width: '100vw', height: '100vh', opacity: mapOpacity }} className="col-xs-12">
         {/* <div className="col-xs-12">
         <iframe style={{ position: 'absolute', top: '50vh', left: '50vw', zIndex: '1500' }} width="10%" height="10%" src="https://www.youtube.com/embed/tK4W-V34DFo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div> */}
@@ -187,10 +196,19 @@ class MapContainer extends React.Component {
           lat: this.props.position.lat,
           lng: this.props.position.lng
         }}
-        style={{ width: "100%", height: "100%", zIndex: '100' }}
+        style={{ width: "100%", height: "88%", marginTop: '80px', zIndex: '100', }}
       >
         {mapStuff}
         {moneyShot}
+
+          <InfoWindow
+          marker={this.state.activeMarkerToo}
+          visible={this.state.showingInfoWindowToo}
+          >
+          <div>
+          <iframe title="video" style={{ zIndex: '1600', width: '100%', height: '80%' }} src={this.state.selectedPlaceToo.video} width="500px"></iframe>
+          </div>
+          </InfoWindow>
   
           <InfoWindow
             marker={this.state.activeMarker}
@@ -218,6 +236,6 @@ class MapContainer extends React.Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyA8BwpKOR2N1Orq_yrBYG9Isy2Vm3aKd-k"
+  apiKey: "AIzaSyB24o8G937MQhxuckQxooH5d0pC5tuHmjU"
 })(MapContainer);
 
