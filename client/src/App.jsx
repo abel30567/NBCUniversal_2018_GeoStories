@@ -14,9 +14,8 @@ class App extends Component {
         lng: Number,
       },
       marketCallBtn: 'inline',
-      closeVideo: false,
       videoDisplay: 'none',
-      videoSrc: 'https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK',
+      video: '',
       markers: [],
     }
     this.makeAPICall = this.makeAPICall.bind(this);
@@ -65,15 +64,17 @@ class App extends Component {
   showVideo(src) {
     // console.log('clicked');
     this.setState({ 
-      seeVideo: true,
       videoDisplay: 'block',
-      videoSrc: src,
+    }, () => {
+      this.setState({ video: <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '100%', height: '100%' }} src={src} width="500px"></iframe> })
     });
   }
-  hideVideo() {
-    this.setState({
+  hideVideo(src) {
+    this.setState({ 
       videoDisplay: 'none',
-    })
+    }, () => {
+      this.setState({ video: <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '100%', height: '100%' }} src={src} width="500px"></iframe> })
+    });
   }
   getMarkers() {
     this.setState({ markerCallBtn: 'none'});
@@ -86,9 +87,9 @@ class App extends Component {
     return (
       <div className="App">
         
-        <a onClick={this.getMarkers} className="btn" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '50vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Chisme</a> 
+        {/* <a onClick={this.getMarkers} className="btn" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '45vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Chisme</a>  */}
         <a onClick={this.hideVideo} className="btn" style={{ display: this.state.videoDisplay, zIndex: '1001', position: 'absolute', top: '0px', left: '0px', color: 'red' }}>X</a>
-        <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '100%', height: '100%' }} src={this.state.videoSrc} width="500px"></iframe>
+        {this.state.video}
         {/* <VideoPlayer /> */}
         <MapContainer getCenter={(lat, long) => {this.makeAPICall(lat, long)}} position={this.state.position} markers={this.state.markers} click={(src) => {this.showVideo(src)}} />
       </div>

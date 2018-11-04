@@ -64,8 +64,8 @@ class MapContainer extends React.Component {
     
 
     return (
-        // <iframe style={{ display: this.state.videoDisplay, position: 'absolute', top: '0px' }} src="https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK" width="500px"></iframe>
-      <Map
+      <div style={{ width: '80vw', height: '80vh' }} className="col-xs-12">
+        <Map
         google={this.props.google}
         zoom={16}
         onDragend={this.getCenter}
@@ -77,6 +77,8 @@ class MapContainer extends React.Component {
       >
         {mapStuff}
       </Map>
+      </div>
+      
     );
   }
 }
