@@ -8,7 +8,7 @@ import React from "react";
 import Popup from 'reactjs-popup';
 import ReactDOM from 'react-dom';
 import { Map, InfoWindow, Marker, GoogleApiWrapper, StreetViewPanorama } from "google-maps-react";
-
+import liddo from '../assets/liddo.png';
 
 class MapContainer extends React.Component {
   constructor(props) {
@@ -117,7 +117,7 @@ class MapContainer extends React.Component {
       panorama.setVisible(true);
       document.getElementById('secondFrame').setAttribute('style', 'display: block; position: absolute; top: 50vh; left: 50vw; z-index: 2000')
       document.getElementById('backToMap').setAttribute('style', 'display: block; position: absolute; top: 100px; left: 25px; z-index: 2010; color: red; background-color: white; border: 2px solid red; border-radius: 5px;')
-    }}>mapbutton</button>);
+    }}><img src={liddo} style={{ width: '25px' }} /></button>);
     ReactDOM.render(React.Children.only(button), document.getElementById("iwc"));
   }
   backToMap() {
@@ -159,6 +159,16 @@ class MapContainer extends React.Component {
                 </div>
               </div>
           </InfoWindow></div>)
+          let moneyShot = '';
+          if (this.state.markers.length > 0) {
+            moneyShot = (<Marker 
+              map={this.props.map}
+              style={{display: moneyShot}}
+              position={this.state.position} 
+              onClick={this.onMarkerClick}
+              name={'Current location'} 
+              />);
+          }
 
     return (
       
@@ -180,7 +190,24 @@ class MapContainer extends React.Component {
         style={{ width: "100%", height: "100%", zIndex: '100' }}
       >
         {mapStuff}
-        {money}
+        {moneyShot}
+  
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+            onOpen={e => {
+              this.onInfoWindowOpen(this.props, e);
+            }}
+            >
+              <div>
+                <iframe style={{ zIndex: '1610' }} width="300px" height="100%" src="https://www.youtube.com/embed/tK4W-V34DFo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div style={{ width: '300px'}}>
+                  <h4 style={{ fontSize: '1rem' }}>Abre sus puertas la nueva sede de Telemundo en Miami | Noticiero | Telemundo</h4>
+                  <p>Video oficial de Noticias Telemundo. Con un costo de más de 250 millones de dólares, el nuevo centro global de operaciones Telemundo Center albergará a 1500 empleados en sus 13 estudios.</p>
+                  <div id="iwc" />
+                </div>
+              </div>
+          </InfoWindow>
       </Map>
       <a onClick={this.backToMap} id="backToMap" className="btn" style={{ zIndex: '1610', display: 'none', borderRadius: '5px', border: '1px solid red', backgroundColor: 'white', color: 'red' }}>Regresar</a>
       <iframe id="secondFrame" style={{ zIndex: '1610', display: 'none' }} width="300px" height="200px" src="https://www.youtube.com/embed/tK4W-V34DFo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

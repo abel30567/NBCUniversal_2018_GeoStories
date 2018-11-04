@@ -106,7 +106,7 @@ class App extends Component {
           <img src={usaLogo} alt="usa" />
           </div>
         </div>
-        <a onClick={this.getMarkers} className="btn single" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '45vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Noticias por mi.</a> 
+        <a onClick={this.getMarkers} className="btn single" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '45vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Historias cercanas</a> 
         <a onClick={this.hideVideo} className="btn" style={{ display: this.state.videoDisplay, zIndex: '1001', position: 'absolute', top: '0px', left: '0px', color: 'red', marginLeft: '10%', marginTop: '8%' }}><i className="fa fa-times" style={{ fontSize: '1.5em' }} aria-hidden="true"></i></a>
         {this.state.video}
         {/* <VideoPlayer /> */}
