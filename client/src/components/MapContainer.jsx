@@ -24,6 +24,7 @@ class MapContainer extends React.Component {
         heading: 280,
         pitch: 0,
       },
+      streetFrame: '',
       showingStreetView: false,
       showingInfoWindow: false,
       showingInfoWindowToo: false,
@@ -79,14 +80,23 @@ class MapContainer extends React.Component {
     // console.log("Latitude: ", event.latLng.lat());
     // console.log("Longitude: ", event.latLng.lng());
     // console.log(event, 'event');
-    // console.log(props, 'marker props')
-    // props.video gets you src
+    console.log(props, 'marker props');
+    console.log(props.map.streetView.visible, 'is Street View');
+    if (props.map.streetView.visible) {
+      this.setState({ 
+        streetFrame: props.video 
+      }, () => {
+        document.getElementById('streetViewFrame').setAttribute('style', 'display: block; position: absolute; top: 40vh; left: 10vw; z-index: 2000');
+      });
+    } else {
+      // props.video gets you src
     // this.props.click(props.video);
     this.setState({
       selectedPlaceToo: props,
       activeMarkerToo: marker,
       showingInfoWindowToo: true
     });
+    }
   }
 
   noVideo() {
@@ -228,6 +238,7 @@ class MapContainer extends React.Component {
           </InfoWindow>
       </Map>
       <a onClick={this.backToMap} id="backToMap" className="btn" style={{ zIndex: '1610', display: 'none', borderRadius: '5px', border: '1px solid red', backgroundColor: 'white', color: 'red' }}>Regresar</a>
+      <iframe id="streetViewFrame" style={{ zIndex: '1610', display: 'none' }} width="300px" height="200px" src={this.state.streetFrame} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       <iframe id="secondFrame" style={{ zIndex: '1610', display: 'none' }} width="300px" height="200px" src="https://www.youtube.com/embed/tK4W-V34DFo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       <div id="pano" style={{width: '100%', height: '100%', zIndex: '100'}}></div>
       </div>
