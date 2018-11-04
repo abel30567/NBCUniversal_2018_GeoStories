@@ -48,7 +48,7 @@ class App extends Component {
       headers: {
         "Access-Control-Allow-Origin": "http://localhost:3000"
       },
-      url: 'http://localhost:8080/markers',
+      url: '/markers',
       data: {
         lat: latData,
         lng: longData,

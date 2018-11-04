@@ -6,6 +6,7 @@ let _ = require('lodash') // CHECK: https://lodash.com/docs/
 let async = require('async') // CHECK: https://caolan.github.io/async/docs.html
 let cors = require('cors') 
 let express = require('express')
+let request = require('request')
 let bodyParser = require('body-parser')
 
 let app = express()
@@ -37,20 +38,34 @@ app.use(bodyParser.json())
 app.post('/markers', function(req, res) {
   async.auto({
     // Returns the user's position or Miami as a center, if no user location is provided
-    "position": function(callback) {
+    "get_position": function(callback) {
       // console.log(req.body);
       callback(null, {
         lat: req.body.lat || 25.7617,
         lng: req.body.lng || -80.1918
       })
     },
-    // Returns an array with 20 links to the same video
-    "videos": function(callback) {
-      callback(null, _.fill(new Array(20), "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK"))
+    // Returns a page of 50 videos
+    "get_videos": function(callback) {
+      request({
+        method: 'GET',
+        url: 'https://stage-api.nbcuni.com/networks/telemundocms/j/videos',
+        headers: {
+          "api_key": "B6JORCtfWI35R457al8N78n64aFSL6JI265U7DrZ"
+        }
+      }, function(error, response, body) {
+        callback(error, JSON.parse(body))
+      })
     },
-    // Returns 20 random geo location markers near the user
-    "markers": ["position", "videos", function(results, callback) {
-      async.map(results.videos, function(video, callback) {
+    // Returns an array with 50 links to the videos
+    "video_links": ["get_videos", function(results, callback) {
+      async.map(results.get_videos.data, function(video, callback) {
+      callback(null, "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/" + video.attributes.mediaId)
+    }, callback)
+    }],
+    // Returns 50 random geo location markers near the user
+    "markers": ["get_position", "video_links", function(results, callback) {
+      async.map(results.video_links, function(video, callback) {
         // New marker is shifted N or S
         let latSign = Math.round(Math.random()) ? 1 : -1
         // How N or S is new marker shifted
@@ -60,14 +75,13 @@ app.post('/markers', function(req, res) {
         // How E or W is new marker shifted
         let lngChange = Math.random() / 100
         callback(null, {
-          // Shifts a new marker vertically from user's position
           position: {
-            lat: results.position.lat + latSign * latChange,
-            lng: results.position.lng + lngSign * lngChange,
+            // Shifts a new marker vertically from user's position
+            lat: results.get_position.lat + latSign * latChange,
+            // Shifts a new marker horizontally from user's position
+            lng: results.get_position.lng + lngSign * lngChange,
           },
-          
-          // Shifts a new marker horizontally from user's position
-          
+                  
           // Sends video
           url: video || "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/k80SJhYjr7UK"
         })
