@@ -8,6 +8,7 @@ let cors = require('cors')
 let express = require('express')
 let request = require('request')
 let bodyParser = require('body-parser')
+let MongoClient = require('mongodb').MongoClient
 
 let app = express()
 let options = {
@@ -37,6 +38,14 @@ app.use(bodyParser.json())
 */
 app.post('/markers', function(req, res) {
   async.auto({
+    // Returns a connections to MongoDB Atlas
+    "db": function(callback) {
+      let uri = "mongodb+srv://874n7EI7cRxCbi9y:n088uAF08JYL9sco@geostoriescluster1-zu1m0.mongodb.net/test?retryWrites=true"
+    
+      MongoClient.connect(uri,{
+        useNewUrlParser: true
+      }, callback)
+    },
     // Returns the user's position or Miami as a center, if no user location is provided
     "get_position": function(callback) {
       // console.log(req.body);
@@ -46,22 +55,23 @@ app.post('/markers', function(req, res) {
       })
     },
     // Returns a page of 50 videos
-    "get_videos": function(callback) {
-      request({
-        method: 'GET',
-        url: 'https://stage-api.nbcuni.com/networks/telemundocms/j/videos',
-        headers: {
-          "api_key": "B6JORCtfWI35R457al8N78n64aFSL6JI265U7DrZ"
-        }
-      }, function(error, response, body) {
-        callback(error, JSON.parse(body))
-      })
-    },
+    "get_videos": ["db", function(results, callback) {
+      results.db.db("Telemundo").collection("Videos").find({}).toArray(callback)
+//       request({
+//         method: 'GET',
+//         url: 'https://stage-api.nbcuni.com/networks/telemundocms/j/videos',
+//         headers: {
+//           "api_key": "B6JORCtfWI35R457al8N78n64aFSL6JI265U7DrZ"
+//         }
+//       }, function(error, response, body) {
+//         callback(error, JSON.parse(body))
+//       })
+    }],
     // Returns an array with 50 links to the videos
     "video_links": ["get_videos", function(results, callback) {
-      async.map(results.get_videos.data, function(video, callback) {
-      callback(null, "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/" + video.attributes.mediaId)
-    }, callback)
+      async.map(results.get_videos, function(video, callback) {
+        callback(null, video.url)
+      }, callback)
     }],
     // Returns 50 random geo location markers near the user
     "markers": ["get_position", "video_links", function(results, callback) {

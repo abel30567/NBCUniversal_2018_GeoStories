@@ -13,6 +13,7 @@ let MongoClient = require('mongodb').MongoClient
 let fs = require('fs')
 let request = require('request')
 
+
 async.auto({
   db: function(callback) {
     /**
@@ -26,31 +27,52 @@ async.auto({
       useNewUrlParser: true
     }, callback)
   },
-  get_videos: function(callback) {
-    request({
-      method: 'GET',
-      url: 'https://stage-api.nbcuni.com/networks/telemundocms/j/videos',
-      headers: {
-        "api_key": "B6JORCtfWI35R457al8N78n64aFSL6JI265U7DrZ"
-      }
-    }, function(error, response, body) {
-      callback(error, JSON.parse(body))
-    })
-  },
-  video_links: ["get_videos", function(results, callback) {
-    async.map(results.get_videos.data, function(video, callback) {
-      callback(null, "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/" + video.attributes.mediaId)
+  load_videos: ["db", function(results, callback) {
+    // This will be the last page of videos at Telemundo
+    let last 
+    // This is the first page of videos at Telemundo
+    let self = 'https://stage-api.nbcuni.com/networks/telemundocms/j/videos'
+    
+    async.until(function() {
+      return last === self
+    }, function(callback) {
+      console.log(chalk.green("Link to `self`: ") + self)
+      console.log(chalk.cyan("Link to `last`: ") + last)
+      request({
+        method: 'GET',
+        url: self,
+        headers: {
+          "api_key": "B6JORCtfWI35R457al8N78n64aFSL6JI265U7DrZ"
+        }
+      }, function(error, response, body) {
+        // Moves video page cursor to the next page
+        body = JSON.parse(body)
+        self = body.links.next
+        last = body.links.last
+        
+        let Videos = results.db.db("Telemundo").collection("Videos")
+        
+        // Inserts the current page of videos to MongoDB Atlass
+        async.map(body.data, function(video, callback) {
+          callback(null, { url: "https://player.theplatform.com/p/0L7ZPC/D7AjRZyan6zo/embed/select/" + video.attributes.mediaId })
+        }, function(error, results) {
+          Videos.insertMany(results, function(error, results) {
+            if(error) {
+              console.log(chalk.red("Error: ") + error)
+            } else {
+              console.log("Added " + results.result.n + " new records")
+              callback()
+            }
+          })
+        })
+      })
     }, callback)
   }],
-  store_videos: ["db", "video_links", function(results, callback) {
-    let Videos = results.db.db("Telemundo").collection("Videos")
-    Videos.insertOne({ videos: results.video_links }, callback)
-  }]
 }, function(error, results) {
   if(error) {
     console.log(chalk.red("Error: ") + error)
   } else {
-    console.log(results.store_videos.insertedCount)
+    console.log(results.store_videos.result.n)
   }
   results.db.close()
 })
