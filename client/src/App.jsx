@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import VideoPlayer from './components/VideoPlayer';
+import './App.css';
 import MapContainer from './components/MapContainer';
+import TeleLogo from './assets/Telemundo_logo_2012.png';
 
 class App extends Component {
   constructor(props) {
@@ -26,7 +28,7 @@ class App extends Component {
   }
   componentDidMount() {
     this.getLocation();
-    console.log(this.state)
+    // console.log(this.state)
   }
   getLocation() {
     navigator.geolocation.getCurrentPosition((_position) => {
@@ -66,14 +68,15 @@ class App extends Component {
     this.setState({ 
       videoDisplay: 'block',
     }, () => {
-      this.setState({ video: <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '100%', height: '100%' }} src={src} width="500px"></iframe> })
+      this.setState({ video: <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '80%', height: '80%', marginLeft: '10%', marginTop: '5%' }} src={src} width="500px"></iframe> })
     });
   }
-  hideVideo(src) {
+  hideVideo() {
+    const src = '';
     this.setState({ 
       videoDisplay: 'none',
     }, () => {
-      this.setState({ video: <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '100%', height: '100%' }} src={src} width="500px"></iframe> })
+      this.setState({ video: <iframe title="video" style={{ display: this.state.videoDisplay, zIndex: '1000', position: 'absolute', top: '0px', width: '80%', height: '80%', marginLeft: '10%', marginTop: '5%' }} src={src} width="500px"></iframe> })
     });
   }
   getMarkers() {
@@ -82,16 +85,18 @@ class App extends Component {
   }
   // Post request needs user's location
   // response gets markers and video links
-
+  
   render() {
     return (
       <div className="App">
-        
-        {/* <a onClick={this.getMarkers} className="btn" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '45vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Chisme</a>  */}
-        <a onClick={this.hideVideo} className="btn" style={{ display: this.state.videoDisplay, zIndex: '1001', position: 'absolute', top: '0px', left: '0px', color: 'red' }}>X</a>
+        <div className="col-xs-12 nav">
+          <img src={TeleLogo} />
+        </div>
+        <a onClick={this.getMarkers} className="btn" style={{display: this.state.markerCallBtn, zIndex: '2000', position: 'absolute', top: '45vh', left: '45vw', backgroundColor: 'white', color: 'red', border: '1px solid red', borderRadius: '5px' }}>Noticias por mi.</a> 
+        <a onClick={this.hideVideo} className="btn" style={{ display: this.state.videoDisplay, zIndex: '1001', position: 'absolute', top: '0px', left: '0px', color: 'red', marginLeft: '10%', marginTop: '5%' }}><i className="fa fa-times" style={{ fontSize: '1.5em' }} aria-hidden="true"></i></a>
         {this.state.video}
         {/* <VideoPlayer /> */}
-        <MapContainer getCenter={(lat, long) => {this.makeAPICall(lat, long)}} position={this.state.position} markers={this.state.markers} click={(src) => {this.showVideo(src)}} />
+        <MapContainer noVideo={() => this.hideVideo()} getCenter={(lat, long) => {this.makeAPICall(lat, long)}} position={this.state.position} markers={this.state.markers} click={(src) => {this.showVideo(src)}} />
       </div>
     );
   }

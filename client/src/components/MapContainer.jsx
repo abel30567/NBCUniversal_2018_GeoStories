@@ -23,11 +23,12 @@ class MapContainer extends React.Component {
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.getCenter = this.getCenter.bind(this);
+    this.noVideo = this.noVideo.bind(this);
   }
   
   componentWillReceiveProps(nextProps) {
    this.setState({ markers: nextProps.markers })
-   console.log(nextProps, 'next props');
+//    console.log(nextProps, 'next props');
   }
   /**
    * CHECK: https://www.npmjs.com/package/google-maps-react#onclick
@@ -49,6 +50,9 @@ class MapContainer extends React.Component {
     this.props.click(props.video);
     // console.log(this.props);
   }
+  noVideo() {
+      this.props.noVideo();
+  }
 
   render() {
       
@@ -69,6 +73,7 @@ class MapContainer extends React.Component {
         google={this.props.google}
         zoom={16}
         onDragend={this.getCenter}
+        onClick={this.noVideo}
         initialCenter={{
           lat: this.props.position.lat,
           lng: this.props.position.lng
